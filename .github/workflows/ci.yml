@@ -204,14 +204,14 @@ jobs:
         retention-days: 30
       continue-on-error: true
     
-    - name: ✅ Dependency quality check complete
+    - name:  Dependency quality check complete
       run: |
-        echo "✅ Dependency quality checks completed!"
-        echo "📊 Reports available in artifacts section"
+        echo " Dependency quality checks completed!"
+        echo " Reports available in artifacts section"
 
   # Job 4: Summary & Notification
   summary:
-    name: 📊 Pipeline Summary
+    name: Pipeline Summary
     runs-on: ubuntu-latest
     needs: [setup, build, dependency-quality]
     if: always()
@@ -219,23 +219,23 @@ jobs:
     steps:
     - name: 📊 Pipeline Results Summary
       run: |
-        echo "📊 CI Pipeline Summary"
+        echo " CI Pipeline Summary"
         echo "====================="
-        echo "🔧 Setup: ${{ needs.setup.result }}"
-        echo "🏗️ Build: ${{ needs.build.result }}"
+        echo " Setup: ${{ needs.setup.result }}"
+        echo " Build: ${{ needs.build.result }}"
         echo "🔒 Dependency Quality: ${{ needs.dependency-quality.result }}"
         echo ""
         if [[ "${{ needs.setup.result }}" == "success" && "${{ needs.build.result }}" == "success" ]]; then
-          echo "🎉 Pipeline completed successfully!"
-          echo "✅ Ready for deployment"
+          echo " Pipeline completed successfully!"
+          echo " Ready for deployment"
         else
           echo "❌ Pipeline had failures"
           echo "🔍 Check individual job logs for details"
         fi
     
-    - name: 🎯 Next Steps
+    - name:  Next Steps
       run: |
-        echo "🎯 Recommended Next Steps:"
+        echo " Recommended Next Steps:"
         echo "========================="
         echo "1. Review dependency report for security issues"
         echo "2. Update outdated packages if needed"

@@ -157,7 +157,7 @@ const config: Config = {
     // '@tailwindcss/typography',
     // '@tailwindcss/aspect-ratio',
   ],
-  // Important: Disable preflight for Ant Design compatibility
+  
 }
 
 export default config

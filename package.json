@@ -22,6 +22,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "swr": "^2.3.4",
+    "useref": "^1.4.4",
     "zustand": "^5.0.6"
   },
   "devDependencies": {

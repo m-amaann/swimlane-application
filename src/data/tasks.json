@@ -6,7 +6,7 @@
       "description": "Conduct user research interviews to understand user needs and pain points",
       "status": "todo",
       "priority": "high",
-      "assignee": { "name": "John Doe", "avatar": "JD" },
+      "assignee": { "name": "Mohamed Amaan", "avatar": "JD" },
       "dueDate": "2024-04-15",
       "comments": 2,
       "tags": ["Research", "UX"]
@@ -17,7 +17,7 @@
       "description": "Create wireframes and high-fidelity mockups for the new dashboard",
       "status": "todo",
       "priority": "medium",
-      "assignee": { "name": "Jane Smith", "avatar": "JS" },
+      "assignee": { "name": "Insaaf Inham", "avatar": "JS" },
       "dueDate": "2024-04-20",
       "comments": 5,
       "tags": ["Design", "UI"]
@@ -28,7 +28,7 @@
       "description": "Build comprehensive component library and design tokens",
       "status": "todo",
       "priority": "low",
-      "assignee": { "name": "Mike Johnson", "avatar": "MJ" },
+      "assignee": { "name": "Vikram", "avatar": "MJ" },
       "dueDate": "2024-04-25",
       "comments": 1,
       "tags": ["Design", "Components"]
@@ -39,7 +39,7 @@
       "description": "Review and analyze client feedback from recent presentation",
       "status": "inprogress",
       "priority": "high",
-      "assignee": { "name": "Sarah Wilson", "avatar": "SW" },
+      "assignee": { "name": "Januda", "avatar": "SW" },
       "dueDate": "2024-04-18",
       "comments": 3,
       "tags": ["Feedback", "Client"]
@@ -50,7 +50,7 @@
       "description": "Create interactive prototype for user testing sessions",
       "status": "approved",
       "priority": "medium",
-      "assignee": { "name": "Tom Brown", "avatar": "TB" },
+      "assignee": { "name": "Jayani", "avatar": "TB" },
       "dueDate": "2024-04-22",
       "comments": 7,
       "tags": ["Prototype", "Interactive"]
@@ -61,7 +61,7 @@
       "description": "Organize team structure and assign responsibilities",
       "status": "reject",
       "priority": "low",
-      "assignee": { "name": "Lisa Davis", "avatar": "LD" },
+      "assignee": { "name": "Suranji", "avatar": "LD" },
       "dueDate": "2024-04-30",
       "comments": 2,
       "tags": ["Management", "Team"]

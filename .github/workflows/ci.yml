@@ -1,4 +1,4 @@
-name: CI Pipeline with Split Jobs
+name: CI Pipeline
 
 on:
   push:

@@ -1,62 +1,73 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { Task, TaskStatus, TaskStore } from '@/types';
+import { useState, useCallback, useEffect } from 'react';
+import { Task, TaskPriority, TaskStatus, TaskStore } from '@/types';
+import { storage } from '@/utils/storage';
 import tasksData from '@/data/tasks.json';
 
-const useTaskStore = create<TaskStore>()(
-    persist(
-        (set, get) => ({
-            tasks: tasksData.tasks as Task[],
-            searchQuery: '',
+export const useTaskStore = (): TaskStore => {
+    const [tasks, setTasks] = useState<Task[]>(() => {
+        // Load from localStorage
+    if (typeof window !== 'undefined') {
+        const saved = storage.get<Task[]>('swimlane-tasks');
+        if (saved) return saved;
+    }
+    
+        // Ensure status is cast to TaskStatus
+    // Ensure status is cast to TaskStatus
+    return tasksData.tasks.map(task => ({
+        ...task,
+        status: task.status as TaskStatus,
+        priority: task.priority as TaskPriority // Add this line
+    }));
+    });
 
-            setSearchQuery: (query: string) => set({ searchQuery: query }),
+    const [searchQuery, setSearchQuery] = useState('');
 
-            getFilteredTasks: (): Task[] => {
-                const { tasks, searchQuery } = get();
-                if (!searchQuery) return tasks;
-
-                const query = searchQuery.toLowerCase();
-
-                // Filter tasks based on search query in title, description, tags, and assignee name
-                return tasks.filter(task =>
-                    task.title.toLowerCase().includes(query) ||
-                    task.description.toLowerCase().includes(query) ||
-                    task.tags.some(tag => tag.toLowerCase().includes(query)) ||
-                    task.assignee.name.toLowerCase().includes(query)
-                );
-            },
-
-            updateTaskStatus: (taskId: string, newStatus: TaskStatus) => {
-                set((state) => ({
-                    tasks: state.tasks.map(task =>
-                        task.id === taskId ? { ...task, status: newStatus } : task
-                    )
-                }));
-            },
-
-            reorderTasks: (tasks: Task[]) => {
-                set({ tasks });
-            },
-
-            // Retrieves tasks
-            getTasksByStatus: (status: TaskStatus): Task[] => {
-                const filteredTasks = get().getFilteredTasks();
-                return filteredTasks.filter(task => task.status === status);
-            },
-
-            // Resets tasks and clears the search query
-            resetTasks: () => set({
-                tasks: tasksData.tasks as Task[],
-                searchQuery: ''
-            }),
-        }),
-
-        // Store name for localStorage
-        {
-            name: 'task-storage',
-            storage: createJSONStorage(() => localStorage),
+    // Save to localStorage whenever tasks change
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            storage.set('swimlane-tasks', tasks);
         }
-    )
-);
+    }, [tasks]);
+
+    const getFilteredTasks = useCallback(() => {
+        if (!searchQuery) return tasks;
+
+        const query = searchQuery.toLowerCase();
+        return tasks.filter(task =>
+            task.title.toLowerCase().includes(query) ||
+            task.description.toLowerCase().includes(query) ||
+            task.tags.some(tag => tag.toLowerCase().includes(query)) ||
+            task.assignee.name.toLowerCase().includes(query)
+        );
+    }, [tasks, searchQuery]);
+
+    const updateTaskStatus = useCallback((taskId: string, newStatus: TaskStatus) => {
+        setTasks(prev => prev.map(task =>
+            task.id === taskId ? { ...task, status: newStatus } : task
+        ));
+    }, []);
+
+    const getTasksByStatus = useCallback((status: TaskStatus) => {
+        return getFilteredTasks().filter(task => task.status === status);
+    }, [getFilteredTasks]);
+
+    const resetTasks = useCallback(() => {
+        setTasks(prev => prev.map(task => ({
+            ...task,
+            status: task.status as TaskStatus
+        })));
+        setSearchQuery('');
+    }, []);
+
+    return {
+        tasks,
+        searchQuery,
+        setSearchQuery,
+        getFilteredTasks,
+        updateTaskStatus,
+        getTasksByStatus,
+        resetTasks
+    };
+};
 
 export default useTaskStore;

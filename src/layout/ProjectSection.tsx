@@ -13,7 +13,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
     projectName = "Sport Xi Project",
     projectDescription = "Event production and management platform",
     status = "In Progress",
-    lastUpdated = Date.now().toLocaleString(),
+    lastUpdated = "2 days ago",
     className = ""
 }) => {
     return (

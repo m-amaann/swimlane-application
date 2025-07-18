@@ -1,11 +1,11 @@
 import React from 'react';
 import { Calendar, MessageCircle, MoreHorizontal } from 'lucide-react';
-import { Task } from '@/types';
+import { Task, TaskStatus } from '@/types';
 import { formatDate, getPriorityColor } from '@/utils/storage';
 
 interface TaskCardProps {
     task: Task;
-    onDragStart: (e: React.DragEvent, task: Task, status: string) => void;
+    onDragStart: (e: React.DragEvent, task: Task, status: TaskStatus) => void;
     onDragEnd: (e: React.DragEvent) => void;
     isDragged?: boolean;
     className?: string;

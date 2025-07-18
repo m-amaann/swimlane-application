@@ -77,7 +77,7 @@ const Swimlane: React.FC<SwimlaneProps> = React.memo(({
           <TaskCard
             key={task.id}
             task={task}
-            onDragStart={handleDragStart}
+            onDragStart={handleDragStart }
             onDragEnd={handleDragEnd}
             isDragged={draggedTask?.id === task.id}
           />

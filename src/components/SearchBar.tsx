@@ -6,19 +6,14 @@ import useTaskStore from '@/state/taskStore';
 const SearchBar: React.FC = () => {
   const { searchQuery, setSearchQuery } = useTaskStore();
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
   return (
     <Input
       placeholder="Search tasks..."
       prefix={<SearchOutlined className="text-gray-400" />}
       value={searchQuery}
-      onChange={handleSearchChange}
+      onChange={(e) => setSearchQuery(e.target.value)}
       className="w-full"
       size="middle"
-      allowClear
     />
   );
 };

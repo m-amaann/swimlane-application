@@ -1,17 +1,68 @@
-name: Build and Deploy
+name: CI Pipeline with Split Jobs
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
+  # Job 1: Setup and Checkout
+  setup:
+    name: Setup & Checkout
     runs-on: ubuntu-latest
     
+    outputs:
+      node-version: ${{ steps.node-info.outputs.version }}
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    
     steps:
-    - name: Checkout code
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      id: setup-node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Get Node.js info
+      id: node-info
+      run: |
+        echo "version=$(node --version)" >> $GITHUB_OUTPUT
+        echo "npm-version=$(npm --version)" >> $GITHUB_OUTPUT
+    
+    - name: Install dependencies
+      run: |
+        echo "Installing dependencies..."
+        npm ci
+    
+    - name: Cache node_modules
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    
+    - name: Setup complete
+      run: |
+        echo "🎉 Setup completed successfully!"
+        echo "Node.js: $(node --version)"
+        echo "npm: $(npm --version)"
+
+  # Job 2: Build Application
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: setup
+    
+    steps:
+    - name: Checkout repository
       uses: actions/checkout@v4
     
     - name: Setup Node.js
@@ -21,7 +72,172 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm install
+      run: npm ci
     
-    - name: Build application
-      run: npm run build
+    - name: Pre-build validation
+      run: |
+        echo "🔍 Validating project structure..."
+        ls -la
+        echo "📄 Package.json scripts:"
+        npm run --silent
+    
+    - name: 🏗️ Build Next.js application
+      run: |
+        echo "🏗️ Starting build process..."
+        npm run build
+      env:
+        NODE_ENV: production
+        CI: true
+    
+    - name: 📊 Build analysis
+      run: |
+        echo "📊 Build completed! Analyzing output..."
+        ls -la .next/
+        du -sh .next/
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: |
+          .next/
+          out/
+        retention-days: 7
+    
+    - name: Build success
+      run: |
+        echo "🎉 Build completed successfully!"
+        echo "📦 Artifacts uploaded and ready for deployment"
+
+  # Job 3: Dependency Quality Checks
+  dependency-quality:
+    name: Dependency Quality
+    runs-on: ubuntu-latest
+    needs: setup
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Security audit
+      run: |
+        echo "🔒 Running npm security audit..."
+        echo "================================="
+        npm audit --audit-level moderate || {
+          echo "⚠️ Security vulnerabilities found!"
+          echo "💡 Run 'npm audit fix' to resolve issues"
+          echo "Continue with caution..."
+        }
+      continue-on-error: true
+    
+    - name: Check outdated packages
+      run: |
+        echo " Checking for outdated packages..."
+        echo "==================================="
+        npm outdated || {
+          echo " Some packages have newer versions available"
+          echo " Run 'npm update' to update packages"
+        }
+      continue-on-error: true
+    
+    - name: 🧾 Dependency tree analysis
+      run: |
+        echo "🧾 Dependency tree analysis..."
+        echo "=============================="
+        echo "📋 Direct dependencies:"
+        npm ls --depth=0
+        echo ""
+        echo "📊 Package statistics:"
+        npm ls --depth=0 --json | jq '.dependencies | length' || echo "jq not available"
+    
+    - name: 📈 Package size analysis
+      run: |
+        echo "📈 Analyzing package sizes..."
+        echo "============================="
+        du -sh node_modules/ || echo "Could not analyze node_modules size"
+        echo "📦 Largest packages in node_modules:"
+        du -sh node_modules/* 2>/dev/null | sort -hr | head -10 || echo "Could not analyze package sizes"
+      continue-on-error: true
+    
+    - name: 🔍 License compliance check
+      run: |
+        echo "🔍 License compliance check..."
+        echo "=============================="
+        npx license-checker --summary || {
+          echo "💡 Install license-checker globally for detailed license analysis"
+          echo "npm install -g license-checker"
+        }
+      continue-on-error: true
+    
+    - name: 📋 Generate dependency report
+      run: |
+        echo "📋 Generating dependency report..."
+        echo "=================================="
+        {
+          echo "# Dependency Report - $(date)"
+          echo ""
+          echo "## Security Audit"
+          npm audit --json 2>/dev/null || echo "Security audit failed"
+          echo ""
+          echo "## Outdated Packages"
+          npm outdated --json 2>/dev/null || echo "No outdated packages or command failed"
+          echo ""
+          echo "## Dependency Tree"
+          npm ls --depth=0 --json 2>/dev/null || echo "Dependency tree generation failed"
+        } > dependency-report.json
+      continue-on-error: true
+    
+    - name: 📤 Upload dependency report
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-report
+        path: dependency-report.json
+        retention-days: 30
+      continue-on-error: true
+    
+    - name: ✅ Dependency quality check complete
+      run: |
+        echo "✅ Dependency quality checks completed!"
+        echo "📊 Reports available in artifacts section"
+
+  # Job 4: Summary & Notification
+  summary:
+    name: 📊 Pipeline Summary
+    runs-on: ubuntu-latest
+    needs: [setup, build, dependency-quality]
+    if: always()
+    
+    steps:
+    - name: 📊 Pipeline Results Summary
+      run: |
+        echo "📊 CI Pipeline Summary"
+        echo "====================="
+        echo "🔧 Setup: ${{ needs.setup.result }}"
+        echo "🏗️ Build: ${{ needs.build.result }}"
+        echo "🔒 Dependency Quality: ${{ needs.dependency-quality.result }}"
+        echo ""
+        if [[ "${{ needs.setup.result }}" == "success" && "${{ needs.build.result }}" == "success" ]]; then
+          echo "🎉 Pipeline completed successfully!"
+          echo "✅ Ready for deployment"
+        else
+          echo "❌ Pipeline had failures"
+          echo "🔍 Check individual job logs for details"
+        fi
+    
+    - name: 🎯 Next Steps
+      run: |
+        echo "🎯 Recommended Next Steps:"
+        echo "========================="
+        echo "1. Review dependency report for security issues"
+        echo "2. Update outdated packages if needed"
+        echo "3. Deploy build artifacts if all checks pass"
+        echo "4. Monitor application performance"

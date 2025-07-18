@@ -6,7 +6,9 @@ interface TopHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onSidebarToggle: () => void;
-  className?: string;
+  className?: string; 
+  isMobile?: boolean;
+  isTablet?: boolean;
 }
 
 const TopHeader: React.FC<TopHeaderProps> = ({

@@ -445,3 +445,20 @@ body {
     background-size: 200% 100%;
   }
 }
+
+
+@media (max-width: 767px) {
+  .mobile-hidden { display: none !important; }
+}
+
+@media (min-width: 768px) {
+  .mobile-only { display: none !important; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tablet-only { display: block !important; }
+}
+
+@media (min-width: 1024px) {
+  .desktop-only { display: block !important; }
+}

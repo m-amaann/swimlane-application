@@ -16,6 +16,7 @@ interface SidebarProps {
   onToggle: () => void;
   isMobile: boolean;
   className?: string;
+  isTablet: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({

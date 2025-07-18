@@ -8,6 +8,8 @@ import Swimlane from './Swimlane';
 interface DashboardProps {
   onNotification?: (message: string) => void;
   className?: string;
+   isMobile?: boolean;
+  isTablet?: boolean;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({

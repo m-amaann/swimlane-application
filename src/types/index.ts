@@ -1,16 +1,14 @@
 export interface Task 
 {
-    id: string;
-    title: string;
-    description: string;
-    status: TaskStatus;
-    priority: TaskPriority;
-    assignee: Assignee;
-    dueDate: string;
-    comments: number;
-    tags: string[];
-    createdAt: Date;
-    updatedAt: Date;
+  id: string;
+  title: string;
+  description: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  assignee: Assignee;
+  dueDate: string;
+  comments: number;
+  tags: string[];
 }
 
 export type TaskStatus = 'todo' | 'inprogress' | 'approved' | 'reject';
@@ -19,19 +17,21 @@ export type TaskPriority = 'low' | 'medium' | 'high';
 
 export interface Assignee 
 {
-    id: string;
-    avatar: string;
+  name: string;
+  avatar: string;
 }
 
 
-export interface Column {
+export interface Column 
+{
   id: TaskStatus;
   title: string;
   color: 'blue' | 'orange' | 'green' | 'red';
 }
 
 
-export interface TaskStore {
+export interface TaskStore 
+{
   tasks: Task[];
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -43,7 +43,8 @@ export interface TaskStore {
 }
 
 
-export interface DragEndEvent {
+export interface DragEndEvent 
+{
   active: { id: string };
   over: { id: string } | null;
 }

@@ -6,7 +6,7 @@
       "description": "Conduct user research interviews to understand user needs and pain points",
       "status": "todo",
       "priority": "high",
-      "assignee": { "name": "Mohamed Amaan", "avatar": "JD" },
+      "assignee": { "name": "John Doe", "avatar": "JD" },
       "dueDate": "2024-04-15",
       "comments": 2,
       "tags": ["Research", "UX"]
@@ -17,7 +17,7 @@
       "description": "Create wireframes and high-fidelity mockups for the new dashboard",
       "status": "todo",
       "priority": "medium",
-      "assignee": { "name": "Insaaf", "avatar": "JS" },
+      "assignee": { "name": "Jane Smith", "avatar": "JS" },
       "dueDate": "2024-04-20",
       "comments": 5,
       "tags": ["Design", "UI"]
@@ -28,7 +28,7 @@
       "description": "Build comprehensive component library and design tokens",
       "status": "todo",
       "priority": "low",
-      "assignee": { "name": "Jayani", "avatar": "MJ" },
+      "assignee": { "name": "Mike Johnson", "avatar": "MJ" },
       "dueDate": "2024-04-25",
       "comments": 1,
       "tags": ["Design", "Components"]

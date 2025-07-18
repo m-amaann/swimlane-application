@@ -18,20 +18,41 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+##  Features
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Pixel-Perfect UI**: Recreated from Figma design with exact specifications
+- **Responsive Design**: Optimized for desktop and mobile (768px+)
+- **Drag & Drop**: task movement between swimlanes
+- **Search**: filtering as you type
+- **UI Component**: Ant Design components with Tailwind CSS
+- **Type Safety**: Full TypeScript implementation
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+- **Framework**: Next.js 14 (Pages Router)
+- **Language**: TypeScript
+- **UI Library**: Ant Design
+- **Styling**: Tailwind CSS v4
+- **State Management**: Zustand
+- **Drag & Drop**: @dnd-kit
+- **Icons**: Ant Design Icons
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## 📁 Project Structure
+
+```
+src/
+├── pages/          # Next.js pages
+├── components/     # Reusable components
+├── layout/         # Layout components
+├── state/          # Zustand stores
+├── data/           # Mock data
+├── utils/          # Utility functions
+└── types/          # TypeScript types
+```
+
 
 ## Deploy on Vercel
 
